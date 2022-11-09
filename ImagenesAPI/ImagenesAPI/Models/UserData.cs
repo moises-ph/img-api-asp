@@ -10,6 +10,6 @@ namespace ImagenesAPI.Models
         public string id_usr { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public byte[] Img_perfil { get; set; }
+        public string Img_perfil { get; set; }
     }
 }

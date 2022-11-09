@@ -2,16 +2,12 @@ create database LoginImg
 
 use LoginImg
 
-create table auth_User(
-	id_usr varchar(10) primary key,
-	contraseña varchar(max) not null,
-);
-
-create table data_user(
+create table user_data(
 	id_usr varchar(10),
+	contraseña varchar(max),
 	Nombre varchar(30) not null,
 	Apellido varchar(30) not null,
-	Img_perfil varbinary(max),
+	Img_perfil varchar(max),
 	constraint fk_id_usr foreign key (id_usr) references auth_User(id_usr)
 );
 
@@ -24,8 +20,7 @@ create procedure create_usr
 as
 begin transaction tx_Createusr
 	BEGIN TRY
-		INSERT into auth_User(id_usr, contraseña) values (@id_usr, @contraseña)
-		INSERT into data_user(id_usr,Nombre,Apellido) values (@id_usr, @Nombre, @Apellido)
+		INSERT into user_data(id_usr, contraseña,Nombre,Apellido) values (@id_usr,@contraseña ,@Nombre, @Apellido)
 		COMMIT transaction tx_Createusr
 		Select 'Creado correctamente' as Respuesta, 0 as Error
 	END TRY
@@ -34,34 +29,7 @@ begin transaction tx_Createusr
 		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
 	END CATCH
 
-execute create_usr '1234567890', 'xd', 'Moises', 'Pineda'
 
-go
-create procedure profile_usr
-	@id_usr varchar(10),
-	@img varbinary(max)
-as
-begin transaction tx_ProfileUsr
-	BEGIN TRY
-		IF(exists(select * from data_user where id_usr = @id_usr))
-		begin
-			UPDATE data_user set Img_perfil = @img
-			SELECT 'imagen actualizada correctamente' as Respuesta, 0 as Error
-			COMMIT transaction tx_ProfileUsr
-		end
-		else
-		BEGIN
-			SELECT 'Usuario no existe' as Respuesta, 1 as Error
-		END
-	END TRY
-	BEGIN CATCH
-		ROLLBACK transaction tx_ProfileUsr
-		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
-	END CATCH
-
-
-
-drop procedure create_usr
 
 go
 create procedure actualizar_usr
@@ -73,10 +41,9 @@ create procedure actualizar_usr
 as
 begin transaction tx_Updateusr
 	BEGIN TRY
-		if(exists(select * from auth_User where id_usr = @id_usr))
+		if(exists(select * from user_data where id_usr = @id_usr))
 		begin
-		UPDATE auth_User set contraseña = @contraseña where id_usr = @id_usr
-		UPDATE data_user set Nombre = @Nombre, Apellido = @Apellido, Img_perfil = @Img_perfil where id_usr = @id_usr
+		UPDATE user_data set contraseña =  @contraseña, Nombre = @Nombre, Apellido = @Apellido, Img_perfil = @Img_perfil where id_usr = @id_usr
 		COMMIT transaction tx_Updateusr
 		Select 'Actualizado Correctamente' as Respuesta, 0 as Error
 		end
@@ -99,10 +66,9 @@ create procedure eliminar_usr
 as
 begin transaction tx_Deleteusr
 	BEGIN TRY
-		if(exists(select * from auth_User where id_usr = @id_usr))
+		if(exists(select * from user_data where id_usr = @id_usr))
 		begin
-			delete from data_user where id_usr = @id_usr
-			delete from auth_User where id_usr = @id_usr
+			delete from user_data where id_usr = @id_usr
 			COMMIT transaction tx_Deleteusr
 			Select 'Eliminado Correctamente' as Respuesta, 0 as Error
 		end
@@ -131,13 +97,4 @@ create procedure select_usr
 as
 begin
 	SELECT Nombre, Apellido FROM data_user where id_usr = @id_usr
-end
-
-
-go
-create procedure select_img_usr
-	@id_usr varchar(10)
-as
-begin
-	SELECT Img_perfil from data_user where id_usr = @id_usr
 end
