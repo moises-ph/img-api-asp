@@ -7,8 +7,7 @@ create table user_data(
 	contraseña varchar(max),
 	Nombre varchar(30) not null,
 	Apellido varchar(30) not null,
-	Img_perfil varchar(max),
-	constraint fk_id_usr foreign key (id_usr) references auth_User(id_usr)
+	Img_perfil varchar(max)
 );
 
 go
@@ -30,6 +29,29 @@ begin transaction tx_Createusr
 	END CATCH
 
 
+go
+create procedure actualizar_perfil
+	@id_usr varchar(10),
+	@Img_perfil varchar(max)
+as
+begin transaction tx_ActualizarPerfil
+	BEGIN TRY
+		UPDATE user_data set Img_perfil = @Img_perfil where id_usr = @id_usr
+		COMMIT transaction tx_ActualizarPerfil
+		Select 'Foto subida correctamente' as Respuesta, 0 as Error
+	END TRY
+	BEGIN CATCH
+		ROLLBACK transaction tx_ActualizarPerfil
+		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
+	END CATCH
+
+go
+create procedure select_perfil
+	@id_usr varchar(10)
+as
+begin 
+SELECT Img_perfil from user_data where id_usr = @id_usr
+end
 
 go
 create procedure actualizar_usr
@@ -85,16 +107,13 @@ begin transaction tx_Deleteusr
 
 	execute eliminar_usr '1234567891'
 
-	delete from auth_User where id_usr = '12'
 
-	drop procedure eliminar_usr
 
-	SELECT * FROM auth_User, data_user
 
 go
 create procedure select_usr
 	@id_usr varchar(10)
 as
 begin
-	SELECT Nombre, Apellido FROM data_user where id_usr = @id_usr
+	SELECT Nombre, Apellido FROM user_data where id_usr = @id_usr
 end
