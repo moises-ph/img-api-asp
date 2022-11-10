@@ -1,4 +1,4 @@
-create database LoginImg
+--create database LoginImg
 
 use LoginImg
 
