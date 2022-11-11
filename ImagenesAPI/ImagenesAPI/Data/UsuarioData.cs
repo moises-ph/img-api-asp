@@ -6,7 +6,6 @@ using ImagenesAPI.Models;
 using System.Data.SqlClient;
 using BC = BCrypt.Net.BCrypt;
 using Microsoft.AspNetCore.Http;
-using stream = System.IO.File;
 
 namespace ImagenesAPI.Data
 {
@@ -18,7 +17,7 @@ namespace ImagenesAPI.Data
             try
             {
                 string pass = BC.HashPassword(user.contraseña);
-                string insertQuery = $"execute create '{user.id_usr}', '{pass}', '{user.Nombre}', '{user.Apellido}'";
+                string insertQuery = $"execute create_usr    '{user.id_usr}', '{pass}', '{user.Nombre}', '{user.Apellido}'";
                 SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
 
                 sqlconnection.Open();
@@ -26,10 +25,23 @@ namespace ImagenesAPI.Data
                 SqlCommand query = new SqlCommand(insertQuery, sqlconnection);
                 SqlDataReader reader = query.ExecuteReader();
                 reader.Read();
-                output.Add(new OutputMessage() { 
-                    Error = Convert.ToBoolean(reader["Error"].ToString()),
-                    Respuesta = reader["Respuesta"].ToString()
-                });;
+                int err =Convert.ToInt32( reader["Error"].ToString());
+                if (err == 1)
+                {
+                    output.Add(new OutputMessage()
+                    {
+                        Error = true,
+                        Respuesta = reader["Respuesta"].ToString()
+                    });
+                }
+                else
+                {
+                    output.Add(new OutputMessage()
+                    {
+                        Error = false,
+                        Respuesta = reader["Respuesta"].ToString()
+                    });
+                }
                 reader.Close();
                 sqlconnection.Close();
                 return output;
@@ -45,41 +57,44 @@ namespace ImagenesAPI.Data
             }
         }
 
-        public static List<OutputMessage> imgPerfil(List<IFormFile> images, string id)
+        public static List<OutputMessage> actualizarUsuario(string id, User user)
         {
             List<OutputMessage> output = new List<OutputMessage>();
-            SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
             try
             {
-                if(images.Count != 1)
+                string pass = BC.HashPassword(user.contraseña);
+                string insertQuery = $"execute actualizar_usr '{id}', '{pass}', '{user.Nombre}', '{user.Apellido}'";
+                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+
+                sqlconnection.Open();
+
+                SqlCommand query = new SqlCommand(insertQuery, sqlconnection);
+                SqlDataReader reader = query.ExecuteReader();
+                if (reader.Read())
                 {
-                    new Exception("Solo se puede una imagen");
-                }
-                else
-                {
-                    foreach(var image in images)
+                    int err = Convert.ToInt32(reader["Error"].ToString());
+                    if (err == 1)
                     {
-                        string filePath = "D:\\System32\\CSharp\\img-api-asp\\ImagenesAPI\\ImagenesAPI\\Profiles" + image.FileName;
-                        var created = stream.Create(filePath);
-                        image.CopyToAsync(created);
-                        string sentencia = $"execute actualizar_perfil '{id}', '{filePath}'";
-                        sqlconnection.Open();
-                        SqlCommand query = new SqlCommand(sentencia, sqlconnection);
-                        SqlDataReader reader = query.ExecuteReader();
-                        reader.Read();
                         output.Add(new OutputMessage()
                         {
-                            Error = Convert.ToBoolean(reader["Error"].ToString()),
+                            Error = true,
                             Respuesta = reader["Respuesta"].ToString()
-                        }); ;
-                        reader.Close();
-                        sqlconnection.Close();
-                        return output;
+                        });
                     }
-
+                    else
+                    {
+                        output.Add(new OutputMessage()
+                        {
+                            Error = false,
+                            Respuesta = reader["Respuesta"].ToString()
+                        });
+                    }
+                    reader.Close();
                 }
+                sqlconnection.Close();
+                return output;
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 output.Add(new OutputMessage
                 {
@@ -87,6 +102,92 @@ namespace ImagenesAPI.Data
                     Respuesta = err.Message
                 });
                 return output;
+            }
+        }
+
+        public static List<OutputMessage> eliminarUsuario(string id)
+        {
+            List<OutputMessage> output = new List<OutputMessage>();
+            try
+            {
+                string insertQuery = $"execute eliminar_usr '{id}'";
+                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+
+                sqlconnection.Open();
+
+                SqlCommand query = new SqlCommand(insertQuery, sqlconnection);
+                SqlDataReader reader = query.ExecuteReader();
+                if (reader.Read())
+                {
+                    int err = Convert.ToInt32(reader["Error"].ToString());
+                    if (err == 1)
+                    {
+                        output.Add(new OutputMessage()
+                        {
+                            Error = true,
+                            Respuesta = reader["Respuesta"].ToString()
+                        });
+                    }
+                    else
+                    {
+                        output.Add(new OutputMessage()
+                        {
+                            Error = false,
+                            Respuesta = reader["Respuesta"].ToString()
+                        });
+                    }
+                    reader.Close();
+                }
+                sqlconnection.Close();
+                return output;
+            }
+            catch (Exception err)
+            {
+                output.Add(new OutputMessage
+                {
+                    Error = true,
+                    Respuesta = err.Message
+                });
+                return output;
+            }
+        }
+
+        public static List<User> consultarUsuario(string id)
+        {
+            List<User> users = new List<User>();
+            try
+            {
+                string sentencia = $"execute select_usr '{id}'";
+                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+
+                sqlconnection.Open();
+
+                SqlCommand query = new SqlCommand(sentencia, sqlconnection);;
+                SqlDataReader reader = query.ExecuteReader();
+                if (reader.Read())
+                {
+                    users.Add(new User()
+                    {
+                        Nombre = reader["Nombre"].ToString(),
+                        Apellido = reader["Apellido"].ToString(),
+                        id_usr = id
+                    });
+                    return users;
+                }
+                else
+                {
+                    return users;
+                }
+
+            }
+            catch(Exception err)
+            {
+                users = new List<User>();
+                users.Add(new User()
+                {
+                    Nombre = err.Message
+                });
+                return users;
             }
         }
     }

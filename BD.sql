@@ -1,14 +1,20 @@
---create database LoginImg
+drop database LoginImg
+
+create database LoginImg
+
+--use MotorStore
 
 use LoginImg
 
 create table user_data(
-	id_usr varchar(10),
+	id_usr varchar(10) primary key,
 	contraseña varchar(max),
 	Nombre varchar(30) not null,
 	Apellido varchar(30) not null,
 	Img_perfil varchar(max)
 );
+
+select * from user_data
 
 go
 create procedure create_usr
@@ -28,6 +34,7 @@ begin transaction tx_Createusr
 		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
 	END CATCH
 
+	--SELECT * from user_data
 
 go
 create procedure actualizar_perfil
@@ -54,18 +61,33 @@ SELECT Img_perfil from user_data where id_usr = @id_usr
 end
 
 go
+create procedure eliminar_perfil
+	@id_usr varchar(10)
+as
+begin transaction Tx_DropProfile
+	BEGIN TRY
+		UPDATE user_data set Img_perfil = '' where id_usr = @id_usr
+		COMMIT Transaction Tx_DropProfile
+		Select 'Perfil eliminado correctamente' as Respuesta, 0 as Error
+	END TRY
+	BEGIN CATCH
+		ROLLBACK transaction Tx_DropProfile
+		Select ERROR_MESSAGE() as Respuesta, 1 as Error
+	END CATCH
+	
+
+go
 create procedure actualizar_usr
 	@id_usr varchar(10),
 	@contraseña varchar(max),
 	@Nombre varchar(30),
-	@Apellido varchar(30),
-	@Img_perfil varbinary(max)
+	@Apellido varchar(30)
 as
 begin transaction tx_Updateusr
 	BEGIN TRY
 		if(exists(select * from user_data where id_usr = @id_usr))
 		begin
-		UPDATE user_data set contraseña =  @contraseña, Nombre = @Nombre, Apellido = @Apellido, Img_perfil = @Img_perfil where id_usr = @id_usr
+		UPDATE user_data set contraseña =  @contraseña, Nombre = @Nombre, Apellido = @Apellido where id_usr = @id_usr
 		COMMIT transaction tx_Updateusr
 		Select 'Actualizado Correctamente' as Respuesta, 0 as Error
 		end
@@ -105,7 +127,7 @@ begin transaction tx_Deleteusr
 		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
 	END CATCH
 
-	execute eliminar_usr '1234567891'
+	--execute eliminar_usr '1234567891'
 
 
 
