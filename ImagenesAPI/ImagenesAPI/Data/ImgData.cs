@@ -12,55 +12,40 @@ namespace ImagenesAPI.Data
 {
     public class ImgData
     {
-        public static List<OutputMessage> crearPerfil(string id, List<IFormFile> imgs)
+        public static List<OutputMessage> CrearPerfil(string id, ProfileModel imgs)
         {
             try
             {
                 List<OutputMessage> output = new List<OutputMessage>();
                 SqlConnection sqlConnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
-                if(imgs.Count > 0)
+                string filePath = $"C:\\Users\\moise\\OneDrive\\Documentos\\SENA\\CSharp 3\\Imagenes\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\{imgs.Image.FileName}";
+                var file = stream.Create(filePath);
+                imgs.Image.CopyToAsync(file);
+                string sentencia = $"execute actualizar_perfil '{id}', '{filePath}'";
+                sqlConnection.Open();
+                SqlCommand query = new SqlCommand(sentencia, sqlConnection);
+                SqlDataReader reader = query.ExecuteReader();
+                reader.Read();
+                int err = Convert.ToInt32(reader["Error"].ToString());
+                if (err == 1)
                 {
-                    foreach(var img in imgs)
+                    output.Add(new OutputMessage()
                     {
-                        string filePath = $"C:\\Users\\moise\\OneDrive\\Documentos\\SENA\\CSharp 3\\Imagenes\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\{img.FileName}";
-                        var file = stream.Create(filePath);
-                        img.CopyToAsync(file);
-                        string sentencia = $"execute actualizar_perfil '{id}', '{filePath}'";
-                        sqlConnection.Open();
-                        SqlCommand query = new SqlCommand(sentencia, sqlConnection);
-                        SqlDataReader reader = query.ExecuteReader();
-                        reader.Read();
-                        int err = Convert.ToInt32(reader["Error"].ToString());
-                        if (err == 1)
-                        {
-                            output.Add(new OutputMessage()
-                            {
-                                Error = true,
-                                Respuesta = reader["Respuesta"].ToString()
-                            });
-                        }
-                        else
-                        {
-                            output.Add(new OutputMessage()
-                            {
-                                Error = false,
-                                Respuesta = reader["Respuesta"].ToString()
-                            });
-                        }
-                        reader.Close();
-                        sqlConnection.Close();
-                    }
-                    return output;
+                        Error = true,
+                        Respuesta = reader["Respuesta"].ToString()
+                    });
                 }
                 else
                 {
                     output.Add(new OutputMessage()
                     {
-                        Error = true,
-                        Respuesta = "No hay ninguna imagen"
+                        Error = false,
+                        Respuesta = reader["Respuesta"].ToString()
                     });
-                    return output;
                 }
+                reader.Close();
+                sqlConnection.Close();
+                return output;
             }
             catch (Exception err)
             {

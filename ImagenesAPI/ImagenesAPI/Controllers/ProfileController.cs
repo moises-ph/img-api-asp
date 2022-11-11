@@ -1,34 +1,33 @@
-﻿using System;
+﻿using ImagenesAPI.Data;
+using ImagenesAPI.Models;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Drawing;
-using ImagenesAPI.Models;
-using ImagenesAPI.Data;
-using Microsoft.AspNetCore.Http;
 
 namespace ImagenesAPI.Controllers
 {
     public class ProfileController : ApiController
     {
         [HttpGet]
-        public Image Get(string id)
+        public Image Consultar(string id)
         {
             return ImgData.GetImage(id);
         }
 
         [HttpPost]
-        public List<OutputMessage> Post(string id, [FromBody] List<IFormFile> img)
+        public List<OutputMessage> Subir(string id, [Microsoft.AspNetCore.Mvc.FromForm] ProfileModel img)
         {
-            return ImgData.crearPerfil(id, img);
+            return ImgData.CrearPerfil(id, img);
         }
+
         [HttpDelete]
-        public List<OutputMessage> Delete(string id)
+        public List<OutputMessage> Eliminar(string id)
         {
             return ImgData.DropProfile(id);
         }
-
     }
 }
