@@ -7,20 +7,21 @@ using Microsoft.AspNetCore.Http;
 using stream = System.IO.File;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 
 namespace ImagenesAPI.Data
 {
     public class ImgData
     {
-        public static List<OutputMessage> CrearPerfil(string id, ProfileModel imgs)
+        public static List<OutputMessage> CrearPerfil(string id, IFormFile imgs)
         {
             try
             {
                 List<OutputMessage> output = new List<OutputMessage>();
-                SqlConnection sqlConnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
-                string filePath = $"C:\\Users\\moise\\OneDrive\\Documentos\\SENA\\CSharp 3\\Imagenes\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\{imgs.Image.FileName}";
+                SqlConnection sqlConnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
+                string filePath = $"D:\\System32\\CSharp\\img-api-asp\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\{imgs.FileName}";
                 var file = stream.Create(filePath);
-                imgs.Image.CopyToAsync(file);
+                imgs.CopyToAsync(file);
                 string sentencia = $"execute actualizar_perfil '{id}', '{filePath}'";
                 sqlConnection.Open();
                 SqlCommand query = new SqlCommand(sentencia, sqlConnection);
@@ -59,11 +60,11 @@ namespace ImagenesAPI.Data
             }
         }
 
-        public static Image GetImage(string id)
+        public static FileStream GetImage(string id)
         {
             try
             {
-                SqlConnection sqlConnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+                SqlConnection sqlConnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
                 string sentencia = $"execute select_perfil '{id}'";
                 SqlCommand query = new SqlCommand(sentencia, sqlConnection);
                 sqlConnection.Open();
@@ -74,31 +75,27 @@ namespace ImagenesAPI.Data
                     reader.Close();
                     if(image != "")
                     {
-                        var file = stream.OpenRead(image);
-                        Image perfil = Image.FromStream(file);
+                        FileStream perfil = File.OpenRead(image);
                         return perfil;
                     }
                     else
                     {
-                        string defaultImg = "C:\\Users\\moise\\OneDrive\\Documentos\\SENA\\CSharp 3\\Imagenes\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\defualt.png";
-                        var file = stream.OpenRead(defaultImg);
-                        Image perfil = Image.FromStream(file);
+                        string defaultImg = "D:\\System32\\CSharp\\img-api-asp\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\defualt.png";
+                        FileStream perfil = File.OpenRead(defaultImg);
                         return perfil;
                     }
                 }
                 else
                 {
-                    string defaultImg = "C:\\Users\\moise\\OneDrive\\Documentos\\SENA\\CSharp 3\\Imagenes\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\defualt.png";
-                    var file = stream.OpenRead(defaultImg);
-                    Image perfil = Image.FromStream(file);
+                    string defaultImg = "D:\\System32\\CSharp\\img-api-asp\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\defualt.png";
+                    FileStream perfil = File.OpenRead(defaultImg);
                     return perfil;
                 }
             }catch(Exception err)
             {
                 Console.WriteLine(err.Message);
-                string defaultImg = "C:\\Users\\moise\\OneDrive\\Documentos\\SENA\\CSharp 3\\Imagenes\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\defualt.png";
-                var file = stream.OpenRead(defaultImg);
-                Image perfil = Image.FromStream(file);
+                string defaultImg = "D:\\System32\\CSharp\\img-api-asp\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\defualt.png";
+                FileStream perfil = File.OpenRead(defaultImg);
                 return perfil;
             }
         }
@@ -108,7 +105,7 @@ namespace ImagenesAPI.Data
             List<OutputMessage> output = new List<OutputMessage>();
             try
             {
-                SqlConnection sqlConnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+                SqlConnection sqlConnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
                 string sentencia = $"execute eliminar_perfil '{id}'";
                 SqlCommand query = new SqlCommand(sentencia, sqlConnection);
                 SqlDataReader reader = query.ExecuteReader();

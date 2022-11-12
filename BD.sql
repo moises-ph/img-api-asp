@@ -14,7 +14,7 @@ create table user_data(
 	Img_perfil varchar(max)
 );
 
-select * from user_data
+
 
 go
 create procedure create_usr

@@ -18,7 +18,7 @@ namespace ImagenesAPI.Data
             {
                 string pass = BC.HashPassword(user.contraseña);
                 string insertQuery = $"execute create_usr    '{user.id_usr}', '{pass}', '{user.Nombre}', '{user.Apellido}'";
-                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+                SqlConnection sqlconnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
 
                 sqlconnection.Open();
 
@@ -64,7 +64,7 @@ namespace ImagenesAPI.Data
             {
                 string pass = BC.HashPassword(user.contraseña);
                 string insertQuery = $"execute actualizar_usr '{id}', '{pass}', '{user.Nombre}', '{user.Apellido}'";
-                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+                SqlConnection sqlconnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
 
                 sqlconnection.Open();
 
@@ -111,7 +111,7 @@ namespace ImagenesAPI.Data
             try
             {
                 string insertQuery = $"execute eliminar_usr '{id}'";
-                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+                SqlConnection sqlconnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
 
                 sqlconnection.Open();
 
@@ -158,7 +158,7 @@ namespace ImagenesAPI.Data
             try
             {
                 string sentencia = $"execute select_usr '{id}'";
-                SqlConnection sqlconnection = new SqlConnection("Data Source=MOISESPH;Initial Catalog = LoginImg; Integrated Security = True");
+                SqlConnection sqlconnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
 
                 sqlconnection.Open();
 
