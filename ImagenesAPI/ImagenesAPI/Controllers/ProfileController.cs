@@ -6,15 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
 
 namespace ImagenesAPI.Controllers
 {
-    public class ProfileController : Controller
+    public class ProfileController : ApiController
     {
-        // GET: Profile
-        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [System.Web.Http.HttpGet]
         public HttpResponseMessage Consultar(string id)
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -23,13 +21,13 @@ namespace ImagenesAPI.Controllers
             return response;
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public List<OutputMessage> Post(string id, [FromForm] Microsoft.AspNetCore.Http.IFormFile img)
+        [System.Web.Http.HttpPost]
+        public List<OutputMessage> Subir(string id, [FromForm] Microsoft.AspNetCore.Http.IFormFile img)
         {
             return ImgData.CrearPerfil(id, img);
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpDelete]
+        [System.Web.Http.HttpDelete]
         public List<OutputMessage> Eliminar(string id)
         {
             return ImgData.DropProfile(id);

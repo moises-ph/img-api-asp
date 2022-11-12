@@ -21,7 +21,7 @@ namespace ImagenesAPI.Data
                 SqlConnection sqlConnection = new SqlConnection("Data Source=ARMDFPCCIFSD036\\SQLEXPRESS;Initial Catalog = LoginImg; Integrated Security = True");
                 string filePath = $"D:\\System32\\CSharp\\img-api-asp\\ImagenesAPI\\ImagenesAPI\\IMAGENES\\{imgs.FileName}";
                 var file = stream.Create(filePath);
-                imgs.CopyToAsync(file);
+                imgs.CopyTo(file);
                 string sentencia = $"execute actualizar_perfil '{id}', '{filePath}'";
                 sqlConnection.Open();
                 SqlCommand query = new SqlCommand(sentencia, sqlConnection);

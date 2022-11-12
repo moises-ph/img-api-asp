@@ -214,7 +214,6 @@ D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\roslyn\vbc.rsp
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\roslyn\VBCSCompiler.exe
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\roslyn\VBCSCompiler.exe.config
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Antlr3.Runtime.dll
-D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\BCrypt.Net-Next.dll
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Microsoft.AspNetCore.Authentication.Abstractions.dll
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Microsoft.AspNetCore.Authentication.Core.dll
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Microsoft.AspNetCore.Authorization.dll
@@ -268,7 +267,6 @@ D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\System.Web.WebPages.d
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\System.Web.WebPages.Razor.dll
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\WebGrease.dll
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Antlr3.Runtime.pdb
-D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\BCrypt.Net-Next.xml
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Microsoft.AspNetCore.Authentication.Abstractions.xml
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Microsoft.AspNetCore.Authentication.Core.xml
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\Microsoft.AspNetCore.Authorization.xml
@@ -324,3 +322,5 @@ D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\obj\Debug\ImagenesAPI.csp
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\obj\Debug\ImagenesAPI.csproj.CopyComplete
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\obj\Debug\ImagenesAPI.dll
 D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\obj\Debug\ImagenesAPI.pdb
+D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\BCrypt.Net-Core.dll
+D:\System32\CSharp\img-api-asp\ImagenesAPI\ImagenesAPI\bin\BCrypt.Net-Core.pdb
