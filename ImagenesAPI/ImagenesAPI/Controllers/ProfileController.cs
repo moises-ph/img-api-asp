@@ -21,10 +21,9 @@ namespace ImagenesAPI.Controllers
             return response;
         }
 
-        [System.Web.Http.HttpPost]
-        public List<OutputMessage> Subir(string id, [FromForm] Microsoft.AspNetCore.Http.IFormFile img)
+        public List<OutputMessage> Subir([FromForm] ProfileModel img, string id)
         {
-            return ImgData.CrearPerfil(id, img);
+            return ImgData.CrearPerfil(id, img.Image);
         }
 
         [System.Web.Http.HttpDelete]
