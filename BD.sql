@@ -52,6 +52,8 @@ begin transaction tx_ActualizarPerfil
 		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
 	END CATCH
 
+execute actualizar_perfil '1235' , 'Gian.jpg'
+
 go
 create procedure select_perfil
 	@id_usr varchar(10)
@@ -127,7 +129,7 @@ begin transaction tx_Deleteusr
 		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
 	END CATCH
 
-	--execute eliminar_usr '1234567891'
+	--execute eliminar_usr '1234'
 
 
 
