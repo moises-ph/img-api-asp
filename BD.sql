@@ -15,7 +15,6 @@ create table user_data(
 );
 
 
-
 go
 create procedure create_usr
 	@id_usr varchar(10),
@@ -25,7 +24,7 @@ create procedure create_usr
 as
 begin transaction tx_Createusr
 	BEGIN TRY
-		INSERT into user_data(id_usr, contraseña,Nombre,Apellido) values (@id_usr,@contraseña ,@Nombre, @Apellido)
+		INSERT into user_data(id_usr, contraseña,Nombre,Apellido, Img_perfil) values (@id_usr,@contraseña ,@Nombre, @Apellido, 'defualt.png')
 		COMMIT transaction tx_Createusr
 		Select 'Creado correctamente' as Respuesta, 0 as Error
 	END TRY
@@ -33,6 +32,7 @@ begin transaction tx_Createusr
 		ROLLBACK transaction tx_Createusr
 		SELECT ERROR_MESSAGE() as Respuesta, 1 as Error
 	END CATCH
+
 
 	--SELECT * from user_data
 
@@ -68,9 +68,9 @@ create procedure eliminar_perfil
 as
 begin transaction Tx_DropProfile
 	BEGIN TRY
-		UPDATE user_data set Img_perfil = '' where id_usr = @id_usr
+		UPDATE user_data set Img_perfil = 'defualt.png' where id_usr = @id_usr
 		COMMIT Transaction Tx_DropProfile
-		Select 'Perfil eliminado correctamente' as Respuesta, 0 as Error
+		Select 'Perfil eliminado correctamente' as Respuesta, 0 as Error	
 	END TRY
 	BEGIN CATCH
 		ROLLBACK transaction Tx_DropProfile
